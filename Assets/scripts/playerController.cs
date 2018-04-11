@@ -42,4 +42,4 @@ public class playerController : MonoBehaviour {
 
     [i].game.set(false)
 
- * /
+ */

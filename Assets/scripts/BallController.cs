@@ -15,6 +15,17 @@ public class BallController : MonoBehaviour
         Invoke("startBall", 0);
     }
 
+    void Update()
+    {
+      if(rb.velocity.x < 5f && rb.velocity.z < 5f)
+        {
+            Vector3 hold = rb.velocity;
+            hold.z = 1f * rb.velocity.z;
+            hold.x = 1f * rb.velocity.x;
+            rb.velocity = hold;
+        }
+    }
+
     void startBall()
     {
         rb.AddForce(new Vector3(speed * -1, 0, speed), ForceMode.Impulse);
@@ -23,14 +34,17 @@ public class BallController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == ("Paddle"))
-            rb.velocity = new Vector3(collision.relativeVelocity.x, collision.relativeVelocity.y, collision.relativeVelocity.z);
+        {
+            Vector3 hold = rb.velocity;
+            hold.z *= -1;
+            rb.AddForce(hold);
+            rb.velocity = hold * speed;
+        }
         else
         {
             Vector3 hold = rb.velocity;
-            //hold.z = (rb.velocity.z / 2f) + (collision.collider.attachedRigidbody.velocity.z / 3f);
             hold.z *= -1;
-            rb.AddForce(Vector3.forward * Mathf.Sign(hold.z) * 1, ForceMode.Impulse);
-            speed = speed + .01f;
+            rb.AddForce(Vector3.forward * Mathf.Sign(hold.z) * -1, ForceMode.Impulse);
             rb.velocity = hold * speed;
         }
     }
